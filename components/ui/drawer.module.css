@@ -1,0 +1,14 @@
+/* The dialog is a transparent full-viewport layer: a real overlay plus the panel. */
+.drawer { pointer-events: auto; --drawer-bg: var(--paper-warm, #f3f3ef); position: fixed; inset: 0; width: 100%; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; padding: 0; border: 0; background: transparent; color: var(--ink-soft, #171717); overflow: hidden; }
+.drawer::backdrop { background: transparent; }
+.overlay { position: absolute; inset: 0; background: rgb(0 0 0 / .38); }
+.panel { position: absolute; inset: 0 0 0 auto; display: flex; flex-direction: column; width: min(100%, 500px); background: var(--drawer-bg); will-change: transform; }
+.drawer[data-size="wide"] .panel { width: min(100%, 480px); }
+.heading { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.5rem 2rem; border-bottom: 1px solid var(--rule-soft, #d1d1cc); background: var(--drawer-bg); }
+.heading h2 { font-size: 22px; font-weight: 650; letter-spacing: -.03em; text-transform: uppercase; }
+.heading button { display: flex; align-items: center; gap: 1rem; min-height: 44px; font-size: 11px; cursor: pointer; }
+.heading button span { font-size: 24px; }
+.content { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 1.5rem 2rem 2rem; }
+.footer { flex: none; padding: 1.25rem 2rem calc(1.5rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--rule-soft, #d1d1cc); background: var(--drawer-bg); }
+@media (min-width: 768px) and (max-width: 1199px) { .drawer[data-size="wide"] .panel { width: min(100%, max(480px, 62vw), 560px); } }
+@media (max-width: 767px) { .heading { padding-inline: 1.25rem; padding-top: calc(1.25rem + env(safe-area-inset-top)); } .content, .footer { padding-inline: 1.25rem; } }

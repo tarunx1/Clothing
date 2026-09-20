@@ -1,0 +1,585 @@
+@import "tailwindcss";
+
+.store-logo-light, .store-logo-dark { width: auto; max-width: 160px; height: 28px; object-fit: contain; }
+.store-logo-dark { display: none; }
+.store-announcement { position: fixed; z-index: 49; top: 80px; left: 0; width: 100%; background: var(--paper, #f3f3ef); color: #111; padding: 8px 24px; text-align: center; font-size: 12px; }
+.store-consent { position: fixed; z-index: 100; bottom: 16px; left: 16px; right: 16px; max-width: 560px; padding: 20px; background: #f3f3ef; color: #111; border: 1px solid #aaa; box-shadow: 0 4px 30px #0002; font-size: 14px; }
+.store-consent button { margin: 16px 20px 0 0; text-decoration: underline; cursor: pointer; }
+.store-consent-preferences { position: fixed; z-index: 48; bottom: 8px; left: 8px; padding: 4px 8px; background: #f3f3ef; color: #111; font-size: 10px; cursor: pointer; }
+html[data-surface="dark"] .store-logo-light { display: none; }
+html[data-surface="dark"] .store-logo-dark { display: block; }
+@import "lenis/dist/lenis.css";
+
+/*
+ * The stacked (portrait) hero layout. Mirrors `shirtConfig.stackedAspect`
+ * (0.85 = 17/20) so CSS typography and the 3D layout always agree.
+ */
+@custom-variant stacked (@media (max-aspect-ratio: 17/20));
+
+@theme inline {
+  --font-sans: var(--font-inter-tight), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+}
+
+:root {
+  --gutter: clamp(1.25rem, 3.2vw, 3.5rem);
+  --header-fg: #000000;
+  /* Storefront surfaces (shop, product page, drawers). */
+  --paper-warm: #f3f3ef;
+  --ink-soft: #171717;
+  --ink-muted: #696962;
+  --rule-soft: #d1d1cb;
+  --media-ground: #dcdcd7;
+}
+
+/* Storefront pages sit on warm paper; the fixed header gets a matching ground. */
+body:has([data-paper-surface]) .site-header {
+  background: var(--paper-warm);
+  color: var(--ink-soft);
+  padding-bottom: 18px;
+}
+
+html[data-surface="dark"] {
+  background: #000000;
+  --header-fg: #ffffff;
+}
+
+html {
+  background: #ffffff;
+  color: #000000;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Header ------------------------------------------------------------ */
+
+.site-header {
+  transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link {
+  position: relative;
+  display: inline-block;
+  padding-block: 0.35em;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.1em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* Intro initial states ---------------------------------------------- */
+
+/* Hidden only while a hero intro exists on the page. GSAP reveals them. */
+body:has([data-hero-intro]) [data-intro-nav] {
+  opacity: 0;
+}
+
+[data-reveal-line] {
+  transform: translateY(110%);
+  will-change: transform;
+}
+
+[data-reveal-fade] {
+  opacity: 0;
+}
+
+/* Display type ------------------------------------------------------ */
+
+.display-type {
+  font-weight: 850;
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* Masks clip the reveal. Padding keeps glyph overshoot from being cut. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.04em 0.05em;
+  margin-block: -0.04em -0.05em;
+}
+
+/* Scroll cue ------------------------------------------------------- */
+
+.scroll-cue {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 2.25rem;
+  overflow: hidden;
+  background: rgb(0 0 0 / 0.12);
+}
+
+.scroll-cue::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  transform: translateY(-100%);
+  animation: scroll-cue 2.4s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+
+@keyframes scroll-cue {
+  0% { transform: translateY(-100%); }
+  55% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue::after {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* Collection Explorer ---------------------------------------------- */
+
+:root {
+  /* Clearance for the fixed header above the collection frames. */
+  --explorer-top: 4.25rem;
+  --explorer-rule: rgb(255 255 255 / 0.12);
+}
+
+/* Hidden until its scroll chapter; GSAP reveals it. */
+[data-explorer-layer] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.collection-explorer {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  color: #ffffff;
+}
+
+.collection-explorer__viewport {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100svh;
+}
+
+.collection-explorer__upper {
+  position: relative;
+  height: 62%;
+  min-height: 0;
+  padding-top: var(--explorer-top);
+}
+
+.collection-explorer__divider {
+  display: block;
+  height: 1px;
+  flex: none;
+  background: var(--explorer-rule);
+}
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--collection-count), minmax(0, 1fr));
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.collection-segment {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+}
+
+.collection-segment__rule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  width: 1px;
+  background: var(--explorer-rule);
+  pointer-events: none;
+}
+
+.collection-segment__inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.collection-segment__label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  height: 2.5rem;
+  flex: none;
+  padding-inline: clamp(0.75rem, 1.1vw, 1.25rem);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.55);
+  transition: color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.collection-segment[data-active] .collection-segment__label,
+.collection-segment[data-hovered] .collection-segment__label {
+  color: #ffffff;
+}
+
+.collection-segment__index,
+.collection-segment__counter {
+  font-variant-numeric: tabular-nums;
+}
+
+.collection-segment__name {
+  overflow: hidden;
+  font-weight: 650;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.collection-segment__counter {
+  padding-block: 0.6rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.collection-segment__counter:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.collection-segment__frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* Neighbours dim slightly while one frame is hovered. */
+.collection-segment__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #000000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.collection-grid[data-hovering] .collection-segment:not([data-hovered]) .collection-segment__frame::after {
+  opacity: 0.1;
+}
+
+.collection-segment__surface {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.collection-segment__surface[data-pointer-mode] {
+  cursor: none;
+}
+
+.collection-segment__surface:focus-visible {
+  outline: 1px solid #ffffff;
+  outline-offset: -8px;
+}
+
+/* Film roll: two frames on one strip; only the strip ever moves. */
+.film-roll,
+.film-strip,
+.film-frame {
+  position: absolute;
+  inset: 0;
+}
+
+.film-roll {
+  overflow: hidden;
+}
+
+.film-frame {
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.film-frame[data-slot="next"][data-transition="roll"] {
+  top: 100%;
+  bottom: auto;
+  height: 100%;
+}
+
+.film-frame[data-slot="next"][data-transition="fade"] {
+  z-index: 1;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.film-frame__image {
+  object-fit: cover;
+  user-select: none;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.collection-segment[data-hovered] .film-frame__image {
+  transform: scale(1.015);
+}
+
+.film-frame__missing,
+.film-frame--empty span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.4);
+}
+
+/* Cursor label (desktop, portalled to <body>). */
+.collection-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  visibility: hidden;
+}
+
+.collection-cursor__track {
+  position: relative;
+  display: block;
+  width: 2.25rem;
+  height: 1px;
+  background: rgb(255 255 255 / 0.35);
+}
+
+.collection-cursor__bar {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* Lower information area. */
+.collection-info {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr);
+  align-content: center;
+  align-items: end;
+  gap: 2rem;
+  min-height: 0;
+  padding: clamp(1rem, 2.4vh, 2rem) var(--gutter) clamp(1.25rem, 4.2vh, 3rem);
+}
+
+.collection-info__count {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: clamp(0.5rem, 1.4vh, 1rem);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgb(255 255 255 / 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.collection-info__total {
+  white-space: pre;
+}
+
+.collection-info__title {
+  font-size: clamp(2.5rem, 5.4vw, 7.5rem);
+}
+
+.collection-info__description {
+  max-width: 34ch;
+  padding-bottom: 0.35em;
+  font-size: clamp(0.95rem, 1.1vw, 1.2rem);
+  line-height: 1.35;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.collection-info__action {
+  justify-self: end;
+  padding-bottom: 0.35em;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.collection-info__arrow {
+  display: inline-block;
+  margin-left: 0.6em;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.collection-info__link:hover .collection-info__arrow,
+.collection-info__link:focus-visible .collection-info__arrow {
+  transform: translate(2px, -2px);
+}
+
+.info-stack {
+  display: grid;
+}
+
+.collection-info__count .info-stack {
+  display: inline-grid;
+}
+
+.info-stack--masked {
+  overflow: hidden;
+  padding-block: 0.04em 0.06em;
+  margin-block: -0.04em -0.06em;
+}
+
+.info-stack__item {
+  display: block;
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+.collection-info__description .info-stack__item {
+  white-space: normal;
+}
+
+.info-stack--masked .info-stack__item[data-initial="hidden"] {
+  transform: translateY(105%);
+}
+
+.collection-info__description .info-stack__item[data-initial="hidden"] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media (max-width: 1100px) {
+  .collection-segment__label {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .collection-segment__index {
+    display: none;
+  }
+}
+
+/* Mobile: horizontal rail, information stacked below. */
+@media (max-width: 767px) {
+  :root {
+    --explorer-top: 5.5rem;
+  }
+
+  .collection-grid[data-layout="rail"] {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 8vw;
+    padding-inline: 8vw;
+    scrollbar-width: none;
+  }
+
+  .collection-grid[data-layout="rail"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  .collection-grid[data-layout="rail"] .collection-segment {
+    flex: 0 0 84vw;
+    scroll-snap-align: center;
+  }
+
+  .collection-segment__index {
+    display: inline;
+  }
+
+  .collection-segment__label {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .collection-info {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-content: center;
+    align-items: end;
+    gap: 0.6rem 1rem;
+  }
+
+  .collection-info__primary {
+    grid-column: 1 / -1;
+  }
+
+  .collection-info__count {
+    margin-bottom: 0.4rem;
+  }
+
+  .collection-info__title {
+    font-size: 12vw;
+  }
+
+  .collection-info__description {
+    font-size: 0.875rem;
+  }
+}
+
+/* Keep navigation legible while lookbook photography passes underneath. */
+html[data-lookbook-active] .site-header {
+  background: #000;
+  padding-bottom: .8rem;
+}

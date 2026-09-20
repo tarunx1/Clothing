@@ -1,0 +1,72 @@
+.section {
+  --lookbook-bg: #000;
+  --lookbook-fg: #f4f3ef;
+  --lookbook-muted: #a2a19d;
+  --lookbook-rule: #323232;
+  position: relative;
+  min-height: 155vh;
+  padding: 6rem var(--gutter) 8rem;
+  background: var(--lookbook-bg);
+  color: var(--lookbook-fg);
+  isolation: isolate;
+  scroll-margin-top: 4rem;
+}
+.chapter { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--lookbook-rule); font-size: 10px; letter-spacing: .12em; color: var(--lookbook-muted); }
+.spread { position: sticky; top: 12vh; display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: clamp(2rem, 4.3vw, 5rem); margin-top: 3rem; align-items: start; }
+.lanes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(.6rem, 1.2vw, 1.3rem); height: 78vh; overflow: hidden; }
+.lane { display: flex; flex-direction: column; gap: 1.2rem; min-width: 0; }
+.frame { position: relative; margin: 0; aspect-ratio: 2 / 3; flex: none; overflow: hidden; background: var(--lookbook-rule); }
+.frame img { object-fit: cover; filter: saturate(.35); }
+.lane:nth-child(2) .frame { aspect-ratio: 1 / 1.65; }
+.story { padding-top: 3vh; }
+.label { margin: 0 0 2rem; font-size: 10px; letter-spacing: .16em; }
+.headingMask { overflow: hidden; }
+.panel h2 { margin: 0; max-width: 10ch; font-size: clamp(2.6rem, 3.8vw, 4.5rem); line-height: .98; font-weight: 750; letter-spacing: -.045em; text-wrap: balance; }
+.description { max-width: 32ch; margin: 1.8rem 0; font-size: 15px; line-height: 1.6; color: var(--lookbook-muted); }
+.details { list-style: none; padding: 0; margin: 0 0 2rem; font-size: 12px; }
+.details li { display: flex; align-items: baseline; gap: 1.2rem; padding: .6rem 0; }
+.details span { font-size: 9px; color: var(--lookbook-muted); font-variant-numeric: tabular-nums; }
+.cta { display: inline-flex; align-items: center; gap: 2.2rem; padding: .7rem 0; border: 0; border-bottom: 1px solid var(--lookbook-muted); background: transparent; color: inherit; font: inherit; font-size: 11px; letter-spacing: .08em; cursor: pointer; text-decoration: none; }
+.cta span { font-size: 20px; line-height: 1; transition: transform .2s ease; }
+.cta:hover span { transform: translate(2px, -2px); }
+.expanded { margin-top: 1.25rem; max-width: 36ch; font-size: 13px; line-height: 1.6; color: var(--lookbook-muted); }
+.footer { position: absolute; bottom: 2.5rem; left: var(--gutter); margin: 0; font-size: 10px; letter-spacing: .14em; color: var(--lookbook-muted); }
+@media (min-width: 1100px) {
+  .frame, .lane:nth-child(2) .frame { aspect-ratio: auto; height: 60vh; }
+}
+@media (min-width: 1100px) and (max-height: 800px) {
+  .spread { top: 5rem; }
+  .story { padding-top: 0; }
+  .panel h2 { font-size: clamp(2.3rem, 3.3vw, 3.4rem); }
+  .label { margin-bottom: 1.3rem; }
+  .description { margin-block: 1.2rem; }
+  .details { margin-bottom: 1rem; }
+}
+@media (max-width: 1099px) {
+  .section { min-height: 0; padding-top: 5rem; padding-bottom: 7rem; }
+  .spread { position: static; display: flex; flex-direction: column; gap: 3.5rem; }
+  .lanes { width: 100%; height: auto; overflow: visible; }
+  .lane:nth-child(2) { padding-top: 3rem; }
+  .lane:nth-child(3) { padding-top: 1.5rem; }
+  .story { width: 100%; padding-top: 0; }
+  .panel { max-width: 38rem; }
+  .panel h2 { font-size: clamp(3rem, 6vw, 4.8rem); max-width: 15ch; }
+  .description { max-width: 42ch; }
+}
+@media (max-width: 767px) {
+  .chapter { font-size: 8px; letter-spacing: .09em; }
+  .spread { gap: 3rem; margin-top: 2rem; }
+  .lanes { display: flex; gap: .85rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding-bottom: 1rem; scrollbar-width: thin; scrollbar-color: var(--lookbook-muted) var(--lookbook-bg); }
+  .lane { display: contents; }
+  .frame, .lane:nth-child(2) .frame { width: 82%; aspect-ratio: 3 / 4; scroll-snap-align: start; }
+  .panel h2 { font-size: clamp(2.7rem, 10vw, 4rem); max-width: 13ch; }
+  .label { margin-bottom: 1.4rem; }
+  .description { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spread { position: static; }
+  .section { min-height: 0; }
+  .lanes { height: auto; overflow: visible; }
+  .cta span { transition: none; }
+  @media (max-width: 767px) { .lanes { overflow-x: auto; } }
+}

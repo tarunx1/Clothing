@@ -1,0 +1,9 @@
+.page { display: grid; place-items: center; min-height: 100dvh; padding: 24px 16px; background: #f5f5f2; color: #161616; }
+.card { display: grid; gap: 16px; width: min(380px, 100%); padding: 28px; border: 1px solid #e2e2dc; border-radius: 10px; background: #fff; }
+.brand { font-size: 14px; font-weight: 800; letter-spacing: -.02em; }
+.card h1 { margin-bottom: 4px; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+.error { padding: 10px 12px; border-radius: 6px; background: #f9e3e0; color: #a8261b; font-size: 12px; }
+.submit { min-height: 42px; border-radius: 6px; background: #161616; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+.submit:disabled { opacity: .6; cursor: progress; }
+.submit:focus-visible { outline: 2px solid #161616; outline-offset: 2px; }
+.note { color: #8d8d85; font-size: 11px; }

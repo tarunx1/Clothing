@@ -1,0 +1,32 @@
+.field { display: grid; align-content: start; gap: 8px; min-width: 0; }
+.field label { display: flex; justify-content: space-between; gap: 16px; font-size: 10px; font-weight: 600; letter-spacing: .075em; text-transform: uppercase; }
+.field label span { color: var(--ink-muted); font-weight: 450; }
+.field input, .field select { width: 100%; min-height: 52px; padding: 0 14px; border: 1px solid var(--rule-soft); border-radius: 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: 14px; outline: 0; transition: border-color .18s, box-shadow .18s; }
+.field select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 18px) 22px, calc(100% - 13px) 22px; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 38px; }
+.field input:focus, .field select:focus { border-color: var(--ink-soft); box-shadow: 0 0 0 1px var(--ink-soft); }
+.field input[aria-invalid="true"], .field select[aria-invalid="true"] { border-color: #a52a22; }
+.field p { margin: -1px 0 0; color: #8e201b; font-size: 11px; line-height: 1.35; }
+.field textarea { width: 100%; min-height: 96px; padding: 12px 14px; border: 1px solid var(--rule-soft); border-radius: 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: 14px; line-height: 1.5; resize: vertical; outline: 0; }
+.field textarea:focus { border-color: var(--ink-soft); box-shadow: 0 0 0 1px var(--ink-soft); }
+.field textarea[aria-invalid="true"] { border-color: #a52a22; }
+.hint { color: var(--ink-muted); font-size: 11px; line-height: 1.4; }
+
+/* Dense admin variant */
+.compact { gap: 6px; }
+.compact label { font-size: 11px; font-weight: 600; letter-spacing: .02em; text-transform: none; color: #3d3d38; }
+.compact input, .compact select { min-height: 36px; padding: 0 10px; border-color: #c9c9c1; border-radius: 6px; background: #fff; font-size: 13px; }
+.compact select { background-position: calc(100% - 16px) 15px, calc(100% - 11px) 15px; padding-right: 30px; }
+.compact textarea { min-height: 84px; padding: 8px 10px; border-color: #c9c9c1; border-radius: 6px; background: #fff; font-size: 13px; }
+.compact input:focus, .compact select:focus, .compact textarea:focus { border-color: #161616; box-shadow: 0 0 0 1px #161616; }
+
+.switchField { display: grid; grid-template-columns: auto; gap: 4px; }
+.switchField input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switchField label { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 550; cursor: pointer; }
+.track { position: relative; width: 34px; height: 20px; flex: none; border-radius: 999px; background: #c9c9c1; transition: background-color .15s; }
+.track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / .25); transition: transform .15s; }
+.switchField input:checked + label .track { background: #161616; }
+.switchField input:checked + label .track::after { transform: translateX(14px); }
+.switchField input:focus-visible + label .track { outline: 2px solid #161616; outline-offset: 2px; }
+.switchField input:disabled + label { opacity: .5; cursor: not-allowed; }
+.switchField p { margin: 0; color: #8e201b; font-size: 11px; }
+@media (prefers-reduced-motion: reduce) { .track, .track::after { transition: none; } }

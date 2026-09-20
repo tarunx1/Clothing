@@ -1,0 +1,18 @@
+export const orderConfirmationCopy = {
+  confirmed: { kicker: "Order confirmed", lines: ["Thank you.", "Order confirmed"], body: "We've received your order and are preparing it for dispatch." },
+  processing: { kicker: "Payment received", lines: ["Confirming", "payment"], body: "Your payment is being confirmed. This page updates on its own in a few seconds." },
+  unpaid: { kicker: "Not completed", lines: ["Payment not", "completed"], body: "This order has not been paid, and nothing was charged. Your bag is saved." },
+  orderNumber: "Order",
+  summary: "Order summary",
+  quantity: "Qty",
+  subtotal: "Subtotal",
+  shipping: "Shipping",
+  free: "Free",
+  tax: "Tax",
+  total: "Total",
+  shippingTo: "Shipping to",
+  continueShopping: "Continue shopping",
+  continueHref: "/shop",
+  returnToCheckout: "Return to checkout",
+  checkoutHref: "/checkout",
+} as const;
