@@ -15,6 +15,7 @@ export const siteConfig = {
 
   navigation: {
     primary: [
+      { label: "Home", href: "/" },
       { label: "Shop", href: "/shop" },
       { label: "Collection", href: "/collections" },
       { label: "About", href: "/about" },

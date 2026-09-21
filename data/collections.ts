@@ -26,7 +26,7 @@ export const collections: Collection[] = [
     shortDescription: "Ancient forms reinterpreted through modern streetwear.",
     description:
       "Columns, meanders and myth, cut into heavyweight cotton. Classical order meets the street.",
-    images: frames("greek", "Greek", ["model wearing a Greek sculpture graphic tee in a stone courtyard", "close editorial view of a Greek-inspired graphic tee"]),
+    images: frames("greek", "Greek", ["model wearing premium oversized streetwear tee on clean studio white background", "model wearing premium oversized streetwear tee alternate view on clean studio white background"]),
     order: 1,
     enabled: true,
   },
@@ -37,7 +37,7 @@ export const collections: Collection[] = [
     shortDescription: "Speed lines, impact frames and hand-drawn momentum.",
     description:
       "Graphics lifted from the language of animation: focus lines, halftone and the frame before impact.",
-    images: frames("anime", "Anime", ["model wearing an original manga graphic tee against concrete", "close editorial view of a manga print on heavyweight cotton"]),
+    images: frames("anime", "Anime", ["model wearing premium oversized streetwear tee on clean studio white background", "model wearing premium oversized streetwear tee alternate view on clean studio white background"]),
     order: 2,
     enabled: true,
   },
@@ -48,7 +48,7 @@ export const collections: Collection[] = [
     shortDescription: "Emblems of power, reduced to their boldest shapes.",
     description:
       "Shields, bolts and skylines. The iconography of heroes, stripped back to pure graphic force.",
-    images: frames("superhero", "Superhero", ["model wearing a lightning shield graphic tee on a rooftop", "close editorial view of a silver shield graphic tee"]),
+    images: frames("superhero", "Superhero", ["model wearing premium oversized streetwear tee on clean studio white background", "model wearing premium oversized streetwear tee alternate view on clean studio white background"]),
     order: 3,
     enabled: true,
   },
@@ -59,7 +59,7 @@ export const collections: Collection[] = [
     shortDescription: "Paddock graphics built for velocity.",
     description:
       "Chequered flags, race numbers and redlines. Motorsport heritage translated into everyday uniform.",
-    images: frames("motorsport", "Motorsport", ["model wearing a number 27 racing tee in a garage", "close editorial view of a racing print tee with red accents"]),
+    images: frames("motorsport", "Motorsport", ["model wearing premium oversized streetwear tee on clean studio white background", "model wearing premium oversized streetwear tee alternate view on clean studio white background"]),
     order: 4,
     enabled: true,
   },
@@ -70,7 +70,7 @@ export const collections: Collection[] = [
     shortDescription: "Occult geometry and ink, printed in black.",
     description:
       "Sigils, serpents and spilled ink. A darker graphic language for those who dress after midnight.",
-    images: frames("dark-art", "Dark Art", ["model wearing a serpent and botanical graphic tee", "close editorial view of an ivory serpent print on faded cotton"]),
+    images: frames("dark-art", "Dark Art", ["model wearing premium oversized streetwear tee on clean studio white background", "model wearing premium oversized streetwear tee alternate view on clean studio white background"]),
     order: 5,
     enabled: true,
   },

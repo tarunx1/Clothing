@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { BagButton } from "@/components/cart/BagButton";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { HeaderShell } from "@/components/layout/HeaderShell";
 import { siteConfig } from "@/config/site";
 import { getStoreSettings } from "@/lib/content/siteContent";
 import { getSettings } from "@/lib/settings/settingsService";
@@ -15,7 +17,7 @@ const { navigation } = siteConfig;
 export async function Header() {
   const [{ storeName }, branding] = await Promise.all([getStoreSettings(), getSettings("branding")]);
   return (
-    <header data-marketing-header className="site-header pointer-events-none fixed inset-x-0 top-0 z-50 text-(--header-fg)">
+    <HeaderShell>
       <div className="grid grid-cols-2 items-start gap-y-3 px-(--gutter) pt-5 text-[11px] leading-none font-medium tracking-[0.04em] uppercase md:grid-cols-3 md:pt-6 md:text-xs">
         <Link
           href="/"
@@ -39,16 +41,19 @@ export async function Header() {
           <ul className="flex gap-5 md:gap-9">
             {navigation.primary.map((item) => (
               <li key={item.label} data-intro-nav>
-                <a href={item.href} className="nav-link pointer-events-auto">
+                <Link href={item.href} className="nav-link pointer-events-auto">
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
         </nav>
 
-        <BagButton />
+        <div className="pointer-events-auto col-start-2 row-start-1 flex items-center justify-self-end gap-3.5 md:col-start-3" data-intro-nav>
+          <ThemeToggle />
+          <BagButton />
+        </div>
       </div>
-    </header>
+    </HeaderShell>
   );
 }

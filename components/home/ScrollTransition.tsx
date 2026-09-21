@@ -7,6 +7,7 @@ import { ANIM, animTarget } from "@/lib/animationTargets";
 import { setSurfaceTheme } from "@/lib/surfaceTheme";
 import type { HeroMotion } from "@/lib/heroMotion";
 import { ScrollStageContext, viewportOffset } from "@/lib/scrollStage";
+import { useTheme } from "@/components/theme/ThemeProvider";
 
 interface ScrollTransitionProps {
   motion: HeroMotion;
@@ -26,13 +27,16 @@ const headlineDrift = () => {
 
 /**
  * Owns the pinned landing-page stage. One pin holds three chapters:
- * 1. story: the scene turns white → black while the shirt shows its back
+ * 1. story: the scene turns white → black (in dark mode) or stays white (in light mode) while the shirt shows its back
  *    (a scrubbed timeline whose duration is 1, so positions read as progress);
- * 2. handoff: the shirt recedes into the black and TURN AROUND masks away;
+ * 2. handoff: the shirt recedes and TURN AROUND masks away;
  * 3. Collection Explorer: rendered as a child layer with its own triggers.
  */
 export function ScrollTransition({ motion, reducedMotion, children, className = "", ...rest }: ScrollTransitionProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   // Exposed through state as well: child scenes set up after the element exists.
   const [stage, setStage] = useState<HTMLElement | null>(null);
   const attachSection = useCallback((node: HTMLElement | null) => {
@@ -46,9 +50,12 @@ export function ScrollTransition({ motion, reducedMotion, children, className = 
       if (!section) return;
       const q = gsap.utils.selector(section);
       const chapters = getScrollChapters(reducedMotion);
+      const stageBg = isDark ? dark : light;
+      const stageDarkVal = isDark ? 1 : 0;
+
       const resetScroll = () => {
-        Object.assign(motion.scroll, { rotY: 0, push: 0, lift: 0, scale: 1, dark: 0, exit: 0 });
-        setSurfaceTheme("light");
+        Object.assign(motion.scroll, { rotY: 0, push: 0, lift: 0, scale: 1, dark: stageDarkVal, exit: 0 });
+        setSurfaceTheme(isDark ? "dark" : "light");
       };
 
       // One pin for the whole stage. Every chapter trigger (here and in the
@@ -64,7 +71,7 @@ export function ScrollTransition({ motion, reducedMotion, children, className = 
       });
 
       if (reducedMotion) {
-        return buildReducedStory(section, q, motion, chapters, resetScroll);
+        return buildReducedStory(section, q, motion, chapters, resetScroll, isDark);
       }
 
       const tl = gsap.timeline({
@@ -75,14 +82,13 @@ export function ScrollTransition({ motion, reducedMotion, children, className = 
           end: () => `+=${viewportOffset(chapters.story)}`,
           scrub: true,
           invalidateOnRefresh: true,
-          onUpdate: (self) => setSurfaceTheme(self.progress >= scrollConfig.headerThemeFlipAt ? "dark" : "light"),
+          onUpdate: () => setSurfaceTheme(isDark ? "dark" : "light"),
         },
       });
 
-      // 0 → 1: one continuous colour move. sine.inOut lands the requested
-      // stops (~#E7E7E7 at 20%, #A7A7A7 at 40%, #585858 at 60%, #181818 at 80%).
-      tl.fromTo(section, { backgroundColor: light }, { backgroundColor: dark, ease: "sine.inOut", duration: 1 }, 0)
-        .fromTo(motion.scroll, { dark: 0 }, { dark: 1, ease: "sine.inOut", duration: 1 }, 0)
+      // Maintain active theme background (stays crisp white in light mode, deep black in dark mode)
+      tl.fromTo(section, { backgroundColor: stageBg }, { backgroundColor: stageBg, ease: "sine.inOut", duration: 1 }, 0)
+        .fromTo(motion.scroll, { dark: stageDarkVal }, { dark: stageDarkVal, ease: "sine.inOut", duration: 1 }, 0)
         // Shirt: front-facing until ~25%, a slow quarter turn by 60%, back revealed by 100%.
         // power2.in → power2.out with equal travel keeps angular velocity continuous at 60%.
         .fromTo(motion.scroll, { rotY: 0 }, { rotY: Math.PI / 2, ease: "power2.in", duration: 0.4 }, 0.2)
@@ -141,7 +147,7 @@ export function ScrollTransition({ motion, reducedMotion, children, className = 
 
       return resetScroll;
     },
-    { scope: sectionRef, dependencies: [reducedMotion, motion], revertOnUpdate: true },
+    { scope: sectionRef, dependencies: [reducedMotion, motion, isDark], revertOnUpdate: true },
   );
 
   return (
@@ -166,6 +172,7 @@ function buildReducedStory(
   motion: HeroMotion,
   chapters: ScrollChapters,
   reset: () => void,
+  isDarkTheme: boolean = false,
 ): () => void {
   const turn = [...q(animTarget(ANIM.turnLine)), ...q(animTarget(ANIM.turnCaption))];
   const headline = q(animTarget(ANIM.headlineBlock));
@@ -175,10 +182,10 @@ function buildReducedStory(
   gsap.set(turn, { yPercent: 0, y: 0 });
   gsap.set(turnBlock, { autoAlpha: 0 });
 
-  let current: ReducedStage = "light";
+  let current: ReducedStage = isDarkTheme ? "dark" : "light";
   const apply = (next: ReducedStage) => {
     current = next;
-    const isDark = next !== "light";
+    const isDark = isDarkTheme;
     setSurfaceTheme(isDark ? "dark" : "light");
     const fade = { duration: 0.45, ease: "power1.inOut", overwrite: "auto" as const };
     gsap.to(section, { backgroundColor: isDark ? dark : light, ...fade });

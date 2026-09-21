@@ -2,10 +2,11 @@
 
 .store-logo-light, .store-logo-dark { width: auto; max-width: 160px; height: 28px; object-fit: contain; }
 .store-logo-dark { display: none; }
-.store-announcement { position: fixed; z-index: 49; top: 80px; left: 0; width: 100%; background: var(--paper, #f3f3ef); color: #111; padding: 8px 24px; text-align: center; font-size: 12px; }
-.store-consent { position: fixed; z-index: 100; bottom: 16px; left: 16px; right: 16px; max-width: 560px; padding: 20px; background: #f3f3ef; color: #111; border: 1px solid #aaa; box-shadow: 0 4px 30px #0002; font-size: 14px; }
+.store-announcement { position: fixed; z-index: 49; top: 80px; left: 0; width: 100%; background: var(--paper-warm, #ffffff); color: var(--ink-soft, #111); padding: 8px 24px; text-align: center; font-size: 12px; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+body:has(.site-header[data-hidden="true"]) .store-announcement { transform: translateY(-160%); pointer-events: none; }
+.store-consent { position: fixed; z-index: 100; bottom: 16px; left: 16px; right: 16px; max-width: 560px; padding: 20px; background: var(--paper-warm, #ffffff); color: #111; border: 1px solid #aaa; box-shadow: 0 4px 30px #0002; font-size: 14px; }
 .store-consent button { margin: 16px 20px 0 0; text-decoration: underline; cursor: pointer; }
-.store-consent-preferences { position: fixed; z-index: 48; bottom: 8px; left: 8px; padding: 4px 8px; background: #f3f3ef; color: #111; font-size: 10px; cursor: pointer; }
+.store-consent-preferences { position: fixed; z-index: 48; bottom: 8px; left: 8px; padding: 4px 8px; background: var(--paper-warm, #ffffff); color: #111; font-size: 10px; cursor: pointer; }
 html[data-surface="dark"] .store-logo-light { display: none; }
 html[data-surface="dark"] .store-logo-dark { display: block; }
 @import "lenis/dist/lenis.css";
@@ -22,15 +23,49 @@ html[data-surface="dark"] .store-logo-dark { display: block; }
   --color-ink: #000000;
 }
 
-:root {
+:root, html[data-theme="light"] {
   --gutter: clamp(1.25rem, 3.2vw, 3.5rem);
   --header-fg: #000000;
-  /* Storefront surfaces (shop, product page, drawers). */
-  --paper-warm: #f3f3ef;
+  --theme-bg: #ffffff;
+  --theme-fg: #000000;
+  /* Storefront surfaces (shop, product page, drawers) - pure white in light mode */
+  --paper-warm: #ffffff;
   --ink-soft: #171717;
   --ink-muted: #696962;
-  --rule-soft: #d1d1cb;
-  --media-ground: #dcdcd7;
+  --rule-soft: #e8e8e8;
+  --media-ground: #f6f6f6;
+
+  /* Collection Explorer tokens (White Light Mode) */
+  --explorer-bg: #ffffff;
+  --explorer-fg: #111111;
+  --explorer-rule: rgba(0, 0, 0, 0.08);
+  --explorer-frame-bg: #f6f6f6;
+  --explorer-label-color: rgba(0, 0, 0, 0.52);
+  --explorer-label-active: #000000;
+  --explorer-desc: #333333;
+  --explorer-count: #666666;
+}
+
+html[data-theme="dark"] {
+  --gutter: clamp(1.25rem, 3.2vw, 3.5rem);
+  --header-fg: #ffffff;
+  --theme-bg: #000000;
+  --theme-fg: #ffffff;
+  --paper-warm: #0a0a0a;
+  --ink-soft: #f5f5f5;
+  --ink-muted: #999994;
+  --rule-soft: #222222;
+  --media-ground: #161616;
+
+  /* Collection Explorer tokens (Dark Mode) */
+  --explorer-bg: #000000;
+  --explorer-fg: #ffffff;
+  --explorer-rule: rgb(255 255 255 / 0.12);
+  --explorer-frame-bg: #0a0a0a;
+  --explorer-label-color: rgb(255 255 255 / 0.55);
+  --explorer-label-active: #ffffff;
+  --explorer-desc: rgb(255 255 255 / 0.72);
+  --explorer-count: rgb(255 255 255 / 0.6);
 }
 
 /* Storefront pages sit on warm paper; the fixed header gets a matching ground. */
@@ -41,11 +76,19 @@ body:has([data-paper-surface]) .site-header {
 }
 
 html[data-surface="dark"] {
-  background: #000000;
   --header-fg: #ffffff;
 }
 
-html {
+html[data-surface="light"] {
+  --header-fg: #000000;
+}
+
+html[data-theme="dark"] {
+  background: #000000;
+  color: #ffffff;
+}
+
+html[data-theme="light"], html:not([data-theme="dark"]) {
   background: #ffffff;
   color: #000000;
   -webkit-text-size-adjust: 100%;
@@ -65,7 +108,25 @@ body {
 /* Header ------------------------------------------------------------ */
 
 .site-header {
-  transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.3s ease;
+  will-change: transform;
+}
+
+.site-header[data-hidden="true"] {
+  transform: translateY(-120%);
+}
+
+.site-header[data-hidden="true"] * {
+  pointer-events: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header,
+  .store-announcement {
+    transition: none !important;
+  }
 }
 
 .nav-link {
@@ -170,7 +231,6 @@ body:has([data-hero-intro]) [data-intro-nav] {
 :root {
   /* Clearance for the fixed header above the collection frames. */
   --explorer-top: 4.25rem;
-  --explorer-rule: rgb(255 255 255 / 0.12);
 }
 
 /* Hidden until its scroll chapter; GSAP reveals it. */
@@ -183,7 +243,9 @@ body:has([data-hero-intro]) [data-intro-nav] {
   position: absolute;
   inset: 0;
   z-index: 20;
-  color: #ffffff;
+  background: var(--explorer-bg);
+  color: var(--explorer-fg);
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .collection-explorer__viewport {
@@ -251,13 +313,13 @@ body:has([data-hero-intro]) [data-intro-nav] {
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgb(255 255 255 / 0.55);
+  color: var(--explorer-label-color);
   transition: color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .collection-segment[data-active] .collection-segment__label,
 .collection-segment[data-hovered] .collection-segment__label {
-  color: #ffffff;
+  color: var(--explorer-label-active);
 }
 
 .collection-segment__index,
@@ -292,7 +354,7 @@ body:has([data-hero-intro]) [data-intro-nav] {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  background: #0a0a0a;
+  background: var(--explorer-frame-bg);
 }
 
 /* Neighbours dim slightly while one frame is hovered. */
@@ -345,7 +407,7 @@ body:has([data-hero-intro]) [data-intro-nav] {
 
 .film-frame {
   overflow: hidden;
-  background: #0a0a0a;
+  background: var(--explorer-frame-bg);
 }
 
 .film-frame[data-slot="next"][data-transition="roll"] {
@@ -437,7 +499,7 @@ body:has([data-hero-intro]) [data-intro-nav] {
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: rgb(255 255 255 / 0.6);
+  color: var(--explorer-count);
   font-variant-numeric: tabular-nums;
 }
 
@@ -454,7 +516,7 @@ body:has([data-hero-intro]) [data-intro-nav] {
   padding-bottom: 0.35em;
   font-size: clamp(0.95rem, 1.1vw, 1.2rem);
   line-height: 1.35;
-  color: rgb(255 255 255 / 0.72);
+  color: var(--explorer-desc);
 }
 
 .collection-info__action {
@@ -580,6 +642,7 @@ body:has([data-hero-intro]) [data-intro-nav] {
 
 /* Keep navigation legible while lookbook photography passes underneath. */
 html[data-lookbook-active] .site-header {
-  background: #000;
+  background: var(--paper-warm, #ffffff);
+  color: var(--ink-soft, #111111);
   padding-bottom: .8rem;
 }

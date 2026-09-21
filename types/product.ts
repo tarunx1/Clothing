@@ -44,6 +44,7 @@ export interface Product {
   details?: string;
   /** Base price for listings; a selected variant's own price takes precedence. */
   price: number;
+  compareAtPrice?: number;
   currency: CurrencyCode;
   collectionId: string;
   collection?: Collection;

@@ -9,6 +9,7 @@ import { LookbookLanes } from "./LookbookLanes";
 import { BrandStoryPanel } from "./BrandStoryPanel";
 import type { LookbookImage } from "@/types/lookbook";
 import type { BrandStoryContent } from "@/lib/content/schemas";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import styles from "./lookbook.module.css";
 
 /** Normal document flow after the existing pinned stage. No second smooth
@@ -16,13 +17,17 @@ import styles from "./lookbook.module.css";
 export function LookbookBrandStory({ images, copy }: { images: LookbookImage[]; copy: BrandStoryContent }) {
   const root = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   useGSAP(() => {
     const section = root.current;
     if (!section) return;
     const q = gsap.utils.selector(section);
     ScrollTrigger.create({
       id: "lookbook-surface", trigger: section, start: "top 100px", end: "bottom top", refreshPriority: -2,
-      onEnter: () => setSurfaceTheme("dark"), onEnterBack: () => setSurfaceTheme("dark"),
+      onEnter: () => setSurfaceTheme(isDark ? "dark" : "light"),
+      onEnterBack: () => setSurfaceTheme(isDark ? "dark" : "light"),
       onToggle: self => document.documentElement.toggleAttribute("data-lookbook-active", self.isActive),
     });
     const clearHeader = () => document.documentElement.removeAttribute("data-lookbook-active");
@@ -42,7 +47,7 @@ export function LookbookBrandStory({ images, copy }: { images: LookbookImage[]; 
       });
     });
     return () => { media.revert(); clearHeader(); };
-  }, { scope: root, dependencies: [reducedMotion], revertOnUpdate: true });
+  }, { scope: root, dependencies: [reducedMotion, isDark], revertOnUpdate: true });
 
   return (
     <section ref={root} id={brandStory.id} className={styles.section} aria-labelledby="brand-story-heading">

@@ -1,8 +1,8 @@
 .section {
-  --lookbook-bg: #000;
-  --lookbook-fg: #f4f3ef;
-  --lookbook-muted: #a2a19d;
-  --lookbook-rule: #323232;
+  --lookbook-bg: var(--paper-warm, #ffffff);
+  --lookbook-fg: var(--ink-soft, #111111);
+  --lookbook-muted: var(--ink-muted, #767670);
+  --lookbook-rule: var(--rule-soft, rgba(0, 0, 0, 0.08));
   position: relative;
   min-height: 155vh;
   padding: 6rem var(--gutter) 8rem;
@@ -10,13 +10,14 @@
   color: var(--lookbook-fg);
   isolation: isolate;
   scroll-margin-top: 4rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 .chapter { display: flex; justify-content: space-between; gap: 1rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--lookbook-rule); font-size: 10px; letter-spacing: .12em; color: var(--lookbook-muted); }
 .spread { position: sticky; top: 12vh; display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: clamp(2rem, 4.3vw, 5rem); margin-top: 3rem; align-items: start; }
 .lanes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(.6rem, 1.2vw, 1.3rem); height: 78vh; overflow: hidden; }
 .lane { display: flex; flex-direction: column; gap: 1.2rem; min-width: 0; }
-.frame { position: relative; margin: 0; aspect-ratio: 2 / 3; flex: none; overflow: hidden; background: var(--lookbook-rule); }
-.frame img { object-fit: cover; filter: saturate(.35); }
+.frame { position: relative; margin: 0; aspect-ratio: 2 / 3; flex: none; overflow: hidden; background: var(--media-ground, #eceae6); }
+.frame img { object-fit: cover; }
 .lane:nth-child(2) .frame { aspect-ratio: 1 / 1.65; }
 .story { padding-top: 3vh; }
 .label { margin: 0 0 2rem; font-size: 10px; letter-spacing: .16em; }

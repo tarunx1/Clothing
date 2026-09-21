@@ -1,0 +1,168 @@
+.collectionsPage {
+  --page-paper: var(--paper-warm, #f8f7f4);
+  --page-ink: var(--ink-soft, #171717);
+  --page-muted: var(--ink-muted, #767670);
+  --page-rule: var(--rule-soft, #e2e0da);
+  background: var(--page-paper);
+  color: var(--page-ink);
+  min-height: 100svh;
+  padding: 145px var(--gutter, clamp(1rem, 4vw, 3.5rem)) 100px;
+}
+
+.intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--page-rule);
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: .09em;
+  margin-bottom: 24px;
+  color: var(--page-muted);
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(40px, 5.5vw, 76px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.count {
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 400;
+  vertical-align: top;
+  margin-left: 12px;
+  color: var(--page-muted);
+}
+
+.introCopy {
+  font-size: 16px;
+  line-height: 1.45;
+  max-width: 380px;
+  color: var(--page-muted);
+  text-align: right;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px 32px;
+  margin-top: 56px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  group: true;
+}
+
+.mediaWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  background: #e6e4df;
+  border-radius: 2px;
+}
+
+.image {
+  object-fit: cover;
+  object-position: center 30%;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.card:hover .image {
+  transform: scale(1.04);
+}
+
+.cardContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 20px;
+  gap: 24px;
+}
+
+.info {
+  flex: 1;
+}
+
+.name {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--page-muted);
+  margin: 0;
+  max-width: 440px;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--page-ink);
+  padding: 10px 18px;
+  border: 1px solid var(--page-ink);
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card:hover .action {
+  background: var(--page-ink);
+  color: var(--page-paper);
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .intro {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .introCopy {
+    text-align: left;
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .collectionsPage {
+    padding-top: 120px;
+  }
+  .cardContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .action {
+    width: 100%;
+    justify-content: center;
+  }
+}

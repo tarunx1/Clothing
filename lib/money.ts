@@ -6,6 +6,9 @@ const formatters = new Map<string, Intl.NumberFormat>();
 
 /** The one place prices become text. Whole units unless the amount has cents. */
 export function formatMoney(amount: number, currency: CurrencyCode, locale = locales[currency]): string {
+  if (currency === "INR") {
+    return `Rs. ${amount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
   const fractional = !Number.isInteger(amount);
   const key = `${locale}|${currency}|${fractional}`;
   let formatter = formatters.get(key);

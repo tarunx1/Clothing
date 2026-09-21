@@ -3,6 +3,7 @@ import { Inter_Tight } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import { getStoreSettings } from "@/lib/content/siteContent";
 import { getSettings } from "@/lib/settings/settingsService";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import "./globals.css";
 
 const interTight = Inter_Tight({
@@ -33,8 +34,17 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const localization = await getSettings("localization");
   return (
-    <html lang={localization.defaultLocale} data-surface="light" className={`${interTight.variable} antialiased`}>
-      <body>{children}</body>
+    <html lang={localization.defaultLocale} data-surface="light" data-theme="light" className={`${interTight.variable} antialiased`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("brand-theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);document.documentElement.setAttribute("data-surface",t);}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

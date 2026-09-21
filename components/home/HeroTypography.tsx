@@ -65,7 +65,7 @@ export function HeroTypography({ copy: hero }: { copy: HeroContent }) {
         as="h1"
         lines={hero.headline}
         caption={hero.caption || undefined}
-        className={`${blockPosition} text-black`}
+        className={`${blockPosition} text-(--theme-fg,black)`}
         targets={{
           block: ANIM.headlineBlock,
           line: ANIM.headlineLine,
@@ -76,7 +76,7 @@ export function HeroTypography({ copy: hero }: { copy: HeroContent }) {
       <EditorialHeading
         lines={hero.turnHeadline}
         caption={hero.turnCaption || undefined}
-        className={`${blockPosition} text-white`}
+        className={`${blockPosition} text-(--theme-fg,black)`}
         targets={{ block: ANIM.turnBlock, line: ANIM.turnLine, caption: ANIM.turnCaption, exit: ANIM.turnExit }}
       />
     </>

@@ -24,6 +24,7 @@ export async function proxy(request: NextRequest) {
     target.searchParams.set("next", `${pathname}${search}`);
     return NextResponse.redirect(target);
   } catch {
+    if (process.env.NODE_ENV !== "production") return NextResponse.next();
     return new NextResponse("The store is temporarily unavailable.", { status: 503, headers: { "cache-control": "no-store" } });
   }
 }

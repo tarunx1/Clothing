@@ -23,7 +23,7 @@ export function BagButton() {
       <button
         type="button"
         data-intro-nav
-        className="nav-link pointer-events-auto col-start-2 row-start-1 cursor-pointer justify-self-end uppercase md:col-start-3"
+        className="nav-link pointer-events-auto cursor-pointer uppercase"
         aria-label={`${label}, ${count} ${count === 1 ? "item" : "items"}`}
         aria-haspopup="dialog"
         aria-expanded={open}

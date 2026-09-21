@@ -9,9 +9,10 @@ import { explorerConfig, shirtConfig } from "@/config/site";
 import { LookbookBrandStory } from "@/components/home/lookbook/LookbookBrandStory";
 import { NewsletterSection } from "@/components/home/newsletter/NewsletterSection";
 import { Footer } from "@/components/layout/Footer";
-import { getCollections } from "@/lib/services/catalogService";
+import { getCollections, getProducts } from "@/lib/services/catalogService";
 import { getHomepageContent, getLookbookImages } from "@/lib/content/siteContent";
 import { getSettings } from "@/lib/settings/settingsService";
+import { FeaturedGrid } from "@/components/home/FeaturedGrid";
 
 export default async function Home() {
   // Resolved on the server so a missing GLB never triggers a 404 request;
@@ -30,7 +31,13 @@ export default async function Home() {
     if (existsSync(path.join(process.cwd(), "public", url))) assets.textures[name] = url;
   }
 
-  const [collections, content, lookbook, features] = await Promise.all([getCollections(), getHomepageContent(), getLookbookImages(), getSettings("features")]);
+  const [collections, products, content, lookbook, features] = await Promise.all([
+    getCollections(),
+    getProducts(),
+    getHomepageContent(),
+    getLookbookImages(),
+    getSettings("features"),
+  ]);
   // Featured (admin-ordered, capped), stripped of image files that do not exist yet.
   const explorerCollections = withAvailableImages(getHomepageCollections(collections, explorerConfig.maxCollections));
 
@@ -40,6 +47,7 @@ export default async function Home() {
       <Hero modelAvailable={modelAvailable} assets={assets} copy={content.hero}>
         <CollectionExplorer collections={explorerCollections} />
       </Hero>
+      <FeaturedGrid products={products} />
       {features.lookbook ? <LookbookBrandStory images={lookbook} copy={content.brandStory} /> : null}
       {features.newsletter ? <NewsletterSection copy={content.newsletter} /> : null}
     </main>

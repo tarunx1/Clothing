@@ -1,0 +1,132 @@
+.aboutPage {
+  --page-paper: var(--paper-warm, #f8f7f4);
+  --page-ink: var(--ink-soft, #171717);
+  --page-muted: var(--ink-muted, #767670);
+  --page-rule: var(--rule-soft, #e2e0da);
+  background: var(--page-paper);
+  color: var(--page-ink);
+  min-height: 100svh;
+  padding: 145px var(--gutter, clamp(1rem, 4vw, 3.5rem)) 100px;
+}
+
+.hero {
+  border-bottom: 1px solid var(--page-rule);
+  padding-bottom: 60px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: .09em;
+  margin-bottom: 24px;
+  color: var(--page-muted);
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(40px, 5.5vw, 76px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin: 0 0 24px;
+}
+
+.lead {
+  font-size: clamp(20px, 3vw, 32px);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  max-width: 860px;
+  margin: 0;
+  color: var(--page-ink);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px 36px;
+  margin-top: 64px;
+  padding-bottom: 80px;
+  border-bottom: 1px solid var(--page-rule);
+}
+
+.pillar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pillarNumber {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--page-muted);
+}
+
+.pillarTitle {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.pillarBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--page-muted);
+  margin: 0;
+}
+
+.ctaSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.ctaText {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 18px 32px;
+  background: var(--page-ink);
+  color: var(--page-paper);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.ctaButton:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .ctaSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .aboutPage {
+    padding-top: 120px;
+  }
+  .ctaButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

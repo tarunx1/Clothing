@@ -23,16 +23,17 @@ interface Corner {
 
 // Counter-clockwise, starting at the left hem. Radii soften each corner.
 const HALF: Corner[] = [
-  { x: 0.355, y: -0.5, r: 0.018 }, // hem, side
-  { x: 0.335, y: 0.215, r: 0.04 }, // underarm
-  { x: 0.49, y: 0.065, r: 0.014 }, // cuff, lower
-  { x: 0.6, y: 0.19, r: 0.022 }, // cuff, upper
-  { x: 0.36, y: 0.425, r: 0.075 }, // shoulder
-  { x: 0.125, y: 0.475, r: 0.018 }, // neck side
+  { x: 0.35, y: -0.5, r: 0.02 },       // hem, side
+  { x: 0.33, y: 0.12, r: 0.05 },       // underarm
+  { x: 0.44, y: -0.06, r: 0.025 },     // cuff, lower (natural downward drape)
+  { x: 0.52, y: 0.05, r: 0.025 },      // cuff, upper (relaxed drop-shoulder angle)
+  { x: 0.39, y: 0.37, r: 0.06 },       // shoulder drop
+  { x: 0.28, y: 0.44, r: 0.05 },       // shoulder high
+  { x: 0.13, y: 0.475, r: 0.02 },      // neck side
 ];
 
 const CORNERS: Corner[] = [
-  { x: -0.355, y: -0.5, r: 0.018 },
+  { x: -0.35, y: -0.5, r: 0.02 },
   ...HALF,
   { x: 0, y: 0.43, r: 0.11 }, // back neckline
   ...HALF.slice()
@@ -124,26 +125,31 @@ interface Fold {
 
 // Drape: valleys (negative) and ridges (positive). Slightly asymmetric on purpose.
 const FOLDS: Fold[] = [
-  // Underarm drag lines and waist ease; the simulation adds live wrinkles on top.
-  { a: [0.33, 0.2], b: [0.17, -0.1], width: 0.065, depth: -0.008 },
-  { a: [-0.32, 0.19], b: [-0.12, -0.18], width: 0.07, depth: -0.007 },
-  { a: [0.22, 0.05], b: [0.07, -0.3], width: 0.04, depth: 0.006 },
-  { a: [-0.05, -0.12], b: [0.1, -0.42], width: 0.03, depth: -0.005 },
-  { a: [0.39, 0.39], b: [0.53, 0.16], width: 0.03, depth: -0.006 },
-  { a: [-0.3, -0.34], b: [0.3, -0.37], width: 0.03, depth: -0.004 },
+  // Underarm tension draping across chest
+  { a: [0.32, 0.12], b: [0.12, -0.15], width: 0.08, depth: -0.014 },
+  { a: [-0.32, 0.12], b: [-0.12, -0.15], width: 0.08, depth: -0.014 },
+  // Vertical gravity drape from chest to lower body
+  { a: [0.18, 0.02], b: [0.14, -0.42], width: 0.06, depth: 0.012 },
+  { a: [-0.18, 0.02], b: [-0.14, -0.42], width: 0.06, depth: 0.012 },
+  // Soft center valley
+  { a: [0, 0.15], b: [0, -0.45], width: 0.09, depth: -0.008 },
+  // Sleeve drape creases
+  { a: [0.38, 0.32], b: [0.48, 0.02], width: 0.05, depth: -0.01 },
+  { a: [-0.38, 0.32], b: [-0.48, 0.02], width: 0.05, depth: -0.01 },
+  // Hem ripple
+  { a: [-0.3, -0.38], b: [0.3, -0.38], width: 0.04, depth: -0.006 },
 ];
 
-/** Unworn panels: a narrow air gap and relaxed, nearly flattened sleeves. */
-const TORSO = { depth: 0.027, hemDepth: 0.018, backScale: 0.9, round: 0.3 };
-// Sleeve axis from the armhole to the cuff centre, with its half width at each end.
-const SLEEVE = { from: [0.3475, 0.32] as Point, to: [0.545, 0.1275] as Point, rootRadius: 0.032, cuffRadius: 0.018, flatten: 0.86 };
+/** Rich 3D sculpted torso volume. */
+const TORSO = { depth: 0.058, hemDepth: 0.036, backScale: 0.92, round: 0.4 };
+// Sleeve axis from armhole to cuff center, hanging down naturally.
+const SLEEVE = { from: [0.35, 0.24] as Point, to: [0.48, -0.005] as Point, rootRadius: 0.055, cuffRadius: 0.042, flatten: 0.82 };
 
 /** The cuff/hem borders are openings: those outline segments never close the tube. */
 function openingWeight(x: number, y: number): number {
-  // Only the hem line and cuff line themselves: seams above them stay sewn shut.
   const hem = 1 - smoothstep(-0.4985, -0.494, y);
-  const cuff = distanceToSegment(Math.abs(x), y, [0.49, 0.065], [0.6, 0.19]);
-  return Math.max(hem, (1 - smoothstep(0.0015, 0.006, cuff)) * smoothstep(0.48, 0.5, Math.abs(x)));
+  const cuff = distanceToSegment(Math.abs(x), y, [0.44, -0.06], [0.52, 0.05]);
+  return Math.max(hem, (1 - smoothstep(0.002, 0.008, cuff)) * smoothstep(0.40, 0.45, Math.abs(x)));
 }
 
 export interface ShirtSurface {
@@ -159,12 +165,12 @@ function foldAt(x: number, y: number): number {
     f += fold.depth * Math.exp(-d * d);
   }
   // Ribbed hem band and sleeve cuffs sit slightly proud of the body.
-  f += 0.0035 * smoothstep(-0.455, -0.47, y) * smoothstep(-0.52, -0.49, y);
+  f += 0.004 * smoothstep(-0.455, -0.47, y) * smoothstep(-0.52, -0.49, y);
   const cuff = Math.min(
-    distanceToSegment(x, y, [0.49, 0.065], [0.6, 0.19]),
-    distanceToSegment(x, y, [-0.49, 0.065], [-0.6, 0.19]),
+    distanceToSegment(x, y, [0.44, -0.06], [0.52, 0.05]),
+    distanceToSegment(x, y, [-0.44, -0.06], [-0.52, 0.05]),
   );
-  f += 0.003 * (1 - smoothstep(0.02, 0.04, cuff));
+  f += 0.0035 * (1 - smoothstep(0.02, 0.05, cuff));
   return f;
 }
 
@@ -301,10 +307,10 @@ export function buildShirtGeometry(quality: "high" | "low", proxySpacing?: numbe
     uvs.set([(x + 0.65) / 1.3, (y + 0.55) / 1.1], target * 2);
 
     // Baked ambient occlusion: darker in fold valleys, armpits and inside the neck.
-    let ao = 1 + Math.min(foldAt(x, y), 0.004) * 8;
-    const armpit = Math.min(Math.hypot(x - 0.335, y - 0.215), Math.hypot(x + 0.335, y - 0.215));
-    ao *= 0.8 + 0.2 * smoothstep(0.0, 0.09, armpit);
-    if (side === 1) ao *= 0.5 + 0.5 * smoothstep(0.92, 1.1, neckRadius(x, y));
+    let ao = 1 + Math.min(foldAt(x, y), 0.008) * 12;
+    const armpit = Math.min(Math.hypot(x - 0.33, y - 0.12), Math.hypot(x + 0.33, y - 0.12));
+    ao *= 0.72 + 0.28 * smoothstep(0.0, 0.12, armpit);
+    if (side === 1) ao *= 0.45 + 0.55 * smoothstep(0.9, 1.15, neckRadius(x, y));
     colors.set([ao, ao, ao], target * 3);
   };
 

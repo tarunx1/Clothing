@@ -12,6 +12,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { ModelErrorBoundary } from "@/components/three/ModelErrorBoundary";
 import { HeroTypography } from "./HeroTypography";
 import { ScrollTransition } from "./ScrollTransition";
+import { GarmentFeatureCallouts } from "./GarmentFeatureCallouts";
 
 // WebGL is client-only and code-split away from the first paint.
 const TShirtScene = dynamic(() => import("@/components/three/TShirtScene"), {
@@ -125,22 +126,25 @@ export function Hero({ modelAvailable, assets, copy, children }: HeroProps) {
         motion={motion}
         reducedMotion={reducedMotion}
         aria-label="Introduction"
-        className="relative h-screen overflow-hidden bg-white supports-[height:100lvh]:h-lvh"
+        className="relative h-screen overflow-hidden bg-(--theme-bg,#ffffff) supports-[height:100lvh]:h-lvh"
       >
-        <div data-anim={ANIM.canvasLayer} className="pointer-events-none absolute inset-0 opacity-0">
-          <div data-anim={ANIM.canvasInner} className="absolute inset-0">
+        <div data-anim={ANIM.canvasLayer} className="absolute inset-0 opacity-0">
+          <div data-anim={ANIM.canvasInner} className="pointer-events-auto absolute inset-0">
             <ModelErrorBoundary fallback={null} onError={markReady}>
               <TShirtScene assets={assets} reducedMotion={reducedMotion} motion={motion} modelAvailable={modelAvailable} onReady={markReady} />
             </ModelErrorBoundary>
           </div>
         </div>
 
-        <div data-anim={ANIM.content} className="relative z-10 h-screen supports-[height:100svh]:h-svh">
+        {/* Garment Feature Annotations & Leader Arrows */}
+        <GarmentFeatureCallouts motion={motion} sceneReady={sceneReady} />
+
+        <div data-anim={ANIM.content} className="pointer-events-none relative z-10 h-screen supports-[height:100svh]:h-svh">
           <HeroTypography copy={copy} />
 
           <div
             data-anim={ANIM.meta}
-            className="absolute inset-x-0 bottom-0 flex items-end justify-between px-(--gutter) pb-5 text-[11px] leading-none font-medium tracking-[0.06em] text-black uppercase md:pb-7 md:text-xs"
+            className="pointer-events-auto absolute inset-x-0 bottom-0 flex items-end justify-between px-(--gutter) pb-5 text-[11px] leading-none font-medium tracking-[0.06em] text-(--theme-fg,#000000) uppercase md:pb-7 md:text-xs"
           >
             <span data-anim={ANIM.metaItem} data-reveal-fade>
               {copy.metaLeft}

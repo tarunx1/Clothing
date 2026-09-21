@@ -1,0 +1,258 @@
+.container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none !important;
+}
+
+/* Feature Item */
+.featureItem {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featureItem:hover {
+  transform: scale(1.02);
+}
+
+/* Callout Card */
+.calloutCard {
+  background: color-mix(in srgb, var(--theme-bg, #ffffff) 78%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--rule-soft, rgba(0, 0, 0, 0.09));
+  padding: 5px 8px;
+  border-radius: 2px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  max-width: 148px;
+}
+
+.featureItem:hover .calloutCard,
+.featureItemActive .calloutCard {
+  border-color: var(--theme-fg, #111111);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  background: color-mix(in srgb, var(--theme-bg, #ffffff) 96%, transparent);
+}
+
+.tag {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted, #888888);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tagDot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--theme-fg, #111111);
+  opacity: 0.5;
+}
+
+.title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--theme-fg, #111111);
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.desc {
+  font-size: 8px;
+  font-weight: 400;
+  color: var(--ink-muted, #666666);
+  line-height: 1.25;
+  margin: 2px 0 0;
+  letter-spacing: 0.01em;
+}
+
+/* Hotspot Pin on the Shirt - Always brilliant white with dark halo so it shines on the black shirt */
+.pin {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.6), 0 2px 5px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  z-index: 26;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.pinRing {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+  opacity: 0.6;
+  animation: pinPulse 2.4s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+.featureItem:hover .pin,
+.featureItemActive .pin {
+  transform: translate(-50%, -50%) scale(1.6);
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 10px rgba(255, 255, 255, 0.9);
+}
+
+.featureItem:hover .pinRing,
+.featureItemActive .pinRing {
+  border-color: #ffffff;
+  opacity: 1;
+}
+
+@keyframes pinPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+}
+
+/* Arrow SVG connector */
+.arrowSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 24;
+}
+
+.arrowShadow {
+  stroke: rgba(0, 0, 0, 0.65);
+  stroke-width: 2.2;
+  opacity: 0.5;
+  transition: opacity 0.2s ease, stroke-width 0.2s ease;
+}
+
+.arrowLine {
+  stroke: #ffffff;
+  stroke-width: 1.1;
+  stroke-dasharray: 3 3;
+  opacity: 0.95;
+  transition: opacity 0.2s ease, stroke-width 0.2s ease;
+}
+
+.arrowHead {
+  fill: #ffffff;
+  stroke: rgba(0, 0, 0, 0.65);
+  stroke-width: 0.65;
+  opacity: 0.95;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.featureItem:hover ~ .arrowSvg .arrowShadow,
+.featureItemActive ~ .arrowSvg .arrowShadow {
+  opacity: 0.85;
+  stroke-width: 2.8;
+}
+
+.featureItem:hover ~ .arrowSvg .arrowLine,
+.featureItemActive ~ .arrowSvg .arrowLine {
+  opacity: 1;
+  stroke-dasharray: none;
+  stroke-width: 1.3;
+}
+
+.featureItem:hover ~ .arrowSvg .arrowHead,
+.featureItemActive ~ .arrowSvg .arrowHead {
+  opacity: 1;
+}
+.featureItemActive ~ .arrowSvg .arrowHead {
+  opacity: 1;
+}
+
+/* Texture inspection badge */
+.textureHint {
+  position: absolute;
+  bottom: 36px;
+  right: var(--gutter, 32px);
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  background: color-mix(in srgb, var(--theme-bg, #ffffff) 82%, transparent);
+  border: 1px solid var(--rule-soft, rgba(0, 0, 0, 0.08));
+  border-radius: 2px;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--theme-fg, #111111);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.textureHintDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+@media (max-width: 1100px) {
+  .calloutCard {
+    max-width: 130px;
+    padding: 4px 6px;
+  }
+  .title {
+    font-size: 8.5px;
+  }
+  .desc {
+    font-size: 7.5px;
+  }
+}
+
+@media (max-width: 767px) {
+  .featureItemDesktop {
+    display: none;
+  }
+  .textureHint {
+    bottom: 24px;
+    right: 16px;
+    font-size: 9px;
+    padding: 6px 10px;
+  }
+}

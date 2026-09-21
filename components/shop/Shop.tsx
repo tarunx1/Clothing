@@ -6,7 +6,7 @@ import { setSurfaceTheme } from "@/lib/surfaceTheme";
 import type { Product, ShopFilters, ShopSort } from "@/types/product";
 import type { Collection } from "@/types/collection";
 import { ProductCard } from "./ProductCard";
-import { ProductPreview } from "./ProductPreview";
+import { QuickSizeModal } from "./QuickSizeModal";
 import { FilterDrawer } from "./FilterDrawer";
 import { SortDropdown } from "./SortDropdown";
 import styles from "./shop.module.css";
@@ -28,9 +28,9 @@ export function Shop({ products, collections }: { products: Product[]; collectio
       <div className={styles.controls}><span className={styles.count} role="status">{filtered.length} PIECES</span><button onClick={() => setFilterOpen(true)}>FILTER {activeCount ? `(${activeCount})` : "+"}</button><SortDropdown value={sort} onChange={(value) => { setSort(value); setLimit(shopConfig.initialCount); }} /></div>
     </div>
     {activeCount ? <div className={styles.activeFilters}><span>{activeCount} active {activeCount === 1 ? "filter" : "filters"}</span><button onClick={reset}>CLEAR ALL ×</button></div> : null}
-    <div className={styles.grid}>{filtered.slice(0, limit).map((product, index) => <ProductCard key={product.id} product={product} featured={sort === "featured" && index === 2} priority={index < 2} onView={() => setSelected(product)} />)}</div>
+    <div className={styles.grid}>{filtered.slice(0, limit).map((product, index) => <ProductCard key={product.id} product={product} priority={index < 4} onView={() => setSelected(product)} />)}</div>
     {!filtered.length ? <div className={styles.empty}><h2>No pieces match this selection.</h2><p>Try another collection, size, or price.</p><button className={styles.primary} onClick={reset}>CLEAR FILTERS</button></div> : <div className={styles.load}><p>SHOWING {Math.min(limit, filtered.length)} OF {filtered.length} PIECES</p>{limit < filtered.length ? <button onClick={() => setLimit(value => value + shopConfig.pageSize)}>LOAD MORE <span aria-hidden="true">↓</span></button> : <span>YOU’VE SEEN THE WHOLE EDIT.</span>}</div>}
     {filterOpen ? <FilterDrawer products={products} collections={collections} filters={filters} ceiling={ceiling} count={filtered.length} onChange={updateFilters} onReset={reset} onClose={() => setFilterOpen(false)} /> : null}
-    {selected ? <ProductPreview key={selected.id} product={selected} onClose={() => setSelected(null)} /> : null}
+    {selected ? <QuickSizeModal key={selected.id} product={selected} onClose={() => setSelected(null)} /> : null}
   </main>;
 }

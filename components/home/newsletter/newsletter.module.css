@@ -1,17 +1,18 @@
-.section { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: end; gap: clamp(3rem, 7vw, 8rem); padding: clamp(6rem, 12vw, 11rem) var(--gutter); background: #000; color: #f4f3ef; }
-.section h2 { margin: 0; font-size: clamp(2.5rem, 5.5vw, 6rem); font-weight: 750; letter-spacing: -.045em; line-height: .98; }
+.section { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: end; gap: clamp(3rem, 7vw, 8rem); padding: clamp(6rem, 12vw, 11rem) var(--gutter); background: var(--paper-warm, #ffffff); color: var(--ink-soft, #111111); transition: background-color 0.3s ease, color 0.3s ease; }
+.section h2 { margin: 0; font-size: clamp(2.5rem, 5.5vw, 6rem); font-weight: 750; letter-spacing: -.045em; line-height: .98; color: var(--ink-soft, #111111); }
 .section h2 span { display: block; }
 .signup { min-width: 0; }
-.description { max-width: 35ch; margin: 0 0 2.5rem; color: #a2a19d; font-size: 14px; line-height: 1.6; }
-.label { font-size: 10px; letter-spacing: .12em; color: #a2a19d; transition: color .2s; }
-.form:focus-within .label { color: #fff; }
-.field { display: flex; gap: 1rem; border-bottom: 1px solid #646464; transition: border-color .2s; }
-.field:focus-within { border-color: #fff; }
+.description { max-width: 35ch; margin: 0 0 2.5rem; color: var(--ink-muted, #767670); font-size: 14px; line-height: 1.6; }
+.label { font-size: 10px; letter-spacing: .12em; color: var(--ink-muted, #767670); transition: color .2s; }
+.form:focus-within .label { color: var(--ink-soft, #111111); }
+.field { display: flex; gap: 1rem; border-bottom: 1px solid var(--rule-soft, rgba(0, 0, 0, 0.2)); transition: border-color .2s; }
+.field:focus-within { border-color: var(--ink-soft, #111111); }
 .field input { width: 100%; min-width: 0; padding: .85rem 0; background: transparent; border: 0; border-radius: 0; color: inherit; font-size: 16px; }
+.field input::placeholder { color: var(--ink-muted, #767670); }
 .field button { display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0; min-height: 48px; background: transparent; border: 0; color: inherit; font-size: 11px; letter-spacing: .08em; cursor: pointer; }
 .field button span { font-size: 22px; }
-.field button:disabled { cursor: default; color: #a2a19d; }
-.field :focus-visible { outline: 1px solid #fff; outline-offset: 4px; }
-.feedback { min-height: 1.5em; margin: .85rem 0 0; font-size: 12px; color: #c4c3bf; }
+.field button:disabled { cursor: default; color: var(--ink-muted, #a2a19d); }
+.field :focus-visible { outline: 1px solid var(--ink-soft, #111111); outline-offset: 4px; }
+.feedback { min-height: 1.5em; margin: .85rem 0 0; font-size: 12px; color: var(--ink-muted, #767670); }
 @media (max-width: 900px) { .section { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; } .section h2 { font-size: clamp(2.4rem, 8.4vw, 5rem); } .signup { max-width: 36rem; width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .label, .field { transition: none; } }

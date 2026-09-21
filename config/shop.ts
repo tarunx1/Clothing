@@ -1,8 +1,8 @@
 export const shopConfig = {
   currency: "INR",
   locale: "en-IN",
-  initialCount: 3,
-  pageSize: 4,
+  initialCount: 8,
+  pageSize: 8,
   maxQuantity: 10,
   bagStorageKey: "clothin.bag.v1",
   sortOptions: [

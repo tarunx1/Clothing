@@ -28,6 +28,7 @@ export function mapProduct(record: ProductRecord, sellable: (inventory: ProductR
     description: record.description,
     details: record.details ?? undefined,
     price: major(record.basePrice),
+    compareAtPrice: record.variants[0]?.compareAtPrice ? major(record.variants[0].compareAtPrice) : undefined,
     currency: record.currency,
     collectionId: record.collection.slug,
     collection: {
