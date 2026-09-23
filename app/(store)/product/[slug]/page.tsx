@@ -6,6 +6,7 @@ import { listingImages } from "@/lib/products";
 import { getStoreSettings } from "@/lib/content/siteContent";
 import { getSettings } from "@/lib/settings/settingsService";
 import { getProductBySlug, getProducts, getRelatedProducts } from "@/lib/services/catalogService";
+import { siteConfig } from "@/config/site";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,45 @@ export default async function ProductRoute({ params }: PageProps<"/product/[slug
   if (!found) notFound();
   const product = withAvailableMedia(found);
   if (!(await getSettings("features")).threeDViewer) product.model3d = undefined;
-  const related = (await getRelatedProducts(found)).map(withAvailableMedia);
-  return <ProductPage product={product} related={related} />;
+  const [related, { storeName }, seo] = await Promise.all([
+    getRelatedProducts(found).then((list) => list.map(withAvailableMedia)),
+    getStoreSettings(),
+    getSettings("seo").catch(() => null),
+  ]);
+
+  const inStock = product.variants.some((v) => v.enabled && v.stock > 0);
+  const images = listingImages(product)
+    .filter((img): img is NonNullable<typeof img> => Boolean(img))
+    .map((img) => img.src);
+  const baseUrl = (seo?.canonicalBaseUrl || siteConfig.url).replace(/\/$/, "");
+
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: images,
+    brand: {
+      "@type": "Brand",
+      name: storeName,
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${baseUrl}/product/${product.slug}`,
+      priceCurrency: product.currency,
+      price: product.price,
+      availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema).replaceAll("<", "\\u003c") }}
+      />
+      <ProductPage product={product} related={related} />
+    </>
+  );
 }

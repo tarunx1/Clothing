@@ -3,7 +3,7 @@
 import type { GarmentAssets } from "@/config/garmentPhysics";
 import type { HeroContent } from "@/lib/content/schemas";
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { introTimings, shirtConfig } from "@/config/site";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { ANIM, animTarget } from "@/lib/animationTargets";
@@ -16,7 +16,6 @@ import { GarmentFeatureCallouts } from "./GarmentFeatureCallouts";
 
 // WebGL is client-only and code-split away from the first paint.
 const TShirtScene = dynamic(() => import("@/components/three/TShirtScene"), {
-  ssr: false,
   loading: () => null,
 });
 
@@ -34,7 +33,12 @@ export function Hero({ modelAvailable, assets, copy, children }: HeroProps) {
   const [motion] = useState(createHeroMotion);
   const reducedMotion = useReducedMotion();
   const [sceneReady, setSceneReady] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const introPlayed = useRef(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const markReady = useCallback(() => setSceneReady(true), []);
 
@@ -130,9 +134,11 @@ export function Hero({ modelAvailable, assets, copy, children }: HeroProps) {
       >
         <div data-anim={ANIM.canvasLayer} className="absolute inset-0 opacity-0">
           <div data-anim={ANIM.canvasInner} className="pointer-events-auto absolute inset-0">
-            <ModelErrorBoundary fallback={null} onError={markReady}>
-              <TShirtScene assets={assets} reducedMotion={reducedMotion} motion={motion} modelAvailable={modelAvailable} onReady={markReady} />
-            </ModelErrorBoundary>
+            {mounted ? (
+              <ModelErrorBoundary fallback={null} onError={markReady}>
+                <TShirtScene assets={assets} reducedMotion={reducedMotion} motion={motion} modelAvailable={modelAvailable} onReady={markReady} />
+              </ModelErrorBoundary>
+            ) : null}
           </div>
         </div>
 
